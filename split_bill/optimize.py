@@ -43,7 +43,6 @@ def optimize(balance):
     x = cp.Variable(m)
     delta = 1e-5
     cons = [A @ x == balance_arr * -1, B @ x == 0, C @ x == 0]
-
     obj = cp.Minimize(W.T @ cp.abs(x))
     non_zeros = np.Inf
     n_iter = 25
