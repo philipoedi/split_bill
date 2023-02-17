@@ -39,24 +39,24 @@ def optimize(balance):
     B = payment_flow_matrix(n)
     C = payself_matrix(n)
     W = cp.Parameter(m, nonneg=True)
-    W.value = np.ones(m)
     x = cp.Variable(m)
     delta = 1e-5
     cons = [A @ x == balance_arr * -1, B @ x == 0, C @ x == 0]
-    obj = cp.Minimize(W.T @ cp.abs(x))
     non_zeros = np.Inf
     n_iter = 25
-    n_start = 10
+    n_start = 25
     x_mat_best = np.zeros((n, n))
     for l in range(n_start):
-        print(l)
+        x.value = np.random.randint(balance_arr.min(), balance_arr.max(), n * n)
+        W.value = np.ones(m)
+        obj = cp.Minimize(W.T @ cp.abs(x))
         if "prob" in vars():
             del prob
         prob = cp.Problem(obj, cons)
         for k in range(n_iter):
             prob.solve()
             W.value = 1 / (delta + np.abs(x.value)) + (
-                np.abs(np.random.randn(n * n) + 1e-5)
+                np.abs(np.random.randn(n * n) + 1e-3)
             )
             x_mat = x.value.reshape(n, n).round()
             non_zeros_new = np.sum(x_mat != 0)
