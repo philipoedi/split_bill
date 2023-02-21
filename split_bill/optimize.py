@@ -3,6 +3,14 @@ import numpy as np
 
 
 def debt_constraint_matrix(n):
+    """
+    Creates the matrix for the quality constraint representing
+    that all debt will be settled and the bill is equally
+    shaerd among the group.
+
+    :param n: int number of people
+    :return: np.ndarray of shape (n, n^2)
+    """
     dim = n * n
     A = np.zeros((n, dim))
     for i in range(n):
@@ -11,6 +19,16 @@ def debt_constraint_matrix(n):
 
 
 def payment_flow_matrix(n):
+    """
+    Creates the matrix for the payment flow constraint.
+    This ensures that the money transacted is conserved,
+    sucht hat if person A pays amount x to person B
+    that person B receives amount x from person A. Money
+    is not created or destroey within this system.
+
+    :param n: int number of people
+    :return: np.ndarray of shape (n*(n-1)/2, n^2)
+    """
     B = np.zeros((int(n * (n - 1) / 2), n * n))
     k = 0
     for i in range(n):
@@ -24,6 +42,13 @@ def payment_flow_matrix(n):
 
 
 def payself_matrix(n):
+    """
+    Creates matrix for equality constraint that represents
+    that a people do not pay themselves.
+
+    :param n: int number of people
+    :return: np.ndarray of shape (n, n^2)
+    """
     C = np.zeros((n, n * n))
     for i in range(n):
         C[i, i * n + i] = 1
